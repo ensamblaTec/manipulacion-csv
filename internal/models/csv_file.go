@@ -3,12 +3,15 @@ package models
 import (
 	"errors"
 	"fmt"
+	"os"
+
+	"github.com/olekukonko/tablewriter"
 )
 
 type CSVFile struct {
 	Encabezado          []string
 	NumFilas, NumColumn uint
-	Filas               []string
+	Filas               [][]string
 }
 
 func (file *CSVFile) SetEncabezado(encabezados []string) {
@@ -20,21 +23,21 @@ func (file *CSVFile) RemoveEncabezado() {
 	file.Encabezado = []string{}
 }
 
-func (file *CSVFile) SetFilas(filas []string) {
+func (file *CSVFile) SetFilas(filas [][]string) {
 	file.Filas = filas
 	file.NumFilas = uint(len(filas))
 }
 
 func (file *CSVFile) RemoveFilas() {
-	file.Filas = []string{}
+	file.Filas = [][]string{}
 }
 
-func (file *CSVFile) AgregarColumna(encabezados []string) {
+func (file *CSVFile) AgregarEncabezado(encabezados []string) {
 	file.Encabezado = append(file.Encabezado, encabezados...)
 }
 
 func (file *CSVFile) AgregarFila(filas []string) {
-	file.Filas = append(file.Filas, filas...)
+	file.Filas = append(file.Filas, filas)
 }
 
 func (file *CSVFile) RemoverFila(fila int) error {
@@ -45,9 +48,19 @@ func (file *CSVFile) RemoverFila(fila int) error {
 	return nil
 }
 
-func (file *CSVFile) Imprimir() {
-	fmt.Println(file.Encabezado)
-	for v := range file.Filas {
-		fmt.Println(v)
+func (file *CSVFile) EscribirArchivo() {
+
+}
+
+func (file *CSVFile) ImprimirEncabezado() {
+	for v := range file.Encabezado {
+		fmt.Print(v, " | \t")
 	}
+}
+
+func (file *CSVFile) Imprimir() {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader(file.Encabezado)
+	table.AppendBulk(file.Filas)
+	table.Render()
 }
