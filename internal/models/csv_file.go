@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/olekukonko/tablewriter"
@@ -48,8 +49,15 @@ func (file *CSVFile) RemoverFila(fila int) error {
 	return nil
 }
 
-func (file *CSVFile) EscribirArchivo() {
+func (file *CSVFile) EscribirArchivo(fileName string) {
+	f, err := os.Create("./csv/" + fileName)
+	if err != nil {
+		log.Fatal("Cannot create file\n", err)
+	}
 
+	defer f.Close()
+
+	fmt.Printf("The file with name %s has been created\n", f.Name())
 }
 
 func (file *CSVFile) ImprimirEncabezado() {

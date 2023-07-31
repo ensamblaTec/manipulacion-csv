@@ -1,7 +1,13 @@
 package utils
 
-import "fmt"
+import (
+	"os"
 
-func ReadFile() {
-	fmt.Println("")
+	"github.com/olekukonko/tablewriter"
+)
+
+func ReadFile(fileName string) {
+	table, _ := tablewriter.NewCSV(os.Stdout, ("testdata/" + fileName + ".csv"), true)
+
+	table.Render()
 }
