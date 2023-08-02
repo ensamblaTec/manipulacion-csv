@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/g-code99/learning-path/week1/manipulacion-csv/pkg/utils"
 )
@@ -12,6 +13,7 @@ func main() {
 	var inRead string
 	var fileName string
 	var inFile string
+	var inOption string
 
 	for {
 		fmt.Printf("============ MENU ============\n" +
@@ -49,14 +51,31 @@ func main() {
 				case "2":
 					fmt.Println("============ ELIMINAR ============")
 					fmt.Println("¿Estás seguro que deseas eliminar el archivo? s/n")
-					utils.ReadInput(&inFile)
-					if inFile == "s" {
+					utils.ReadInput(&inOption)
+					if inOption == "s" {
 						os.Remove("./data/" + fileName)
 						break for_select
 					}
 					continue
 				case "3":
 					fmt.Println("============ ESCRIBIR ============")
+					utils.ReadHeaders(fileName)
+				for_input:
+					for {
+						fmt.Println("Ingresa los datos de entrada")
+						utils.ReadInput(&inFile)
+						if len(inFile) == 0 {
+							continue
+						}
+
+						utils.WriteFile(fileName, [][]string{strings.Split(inFile, ",")})
+						fmt.Println("¿Deseas ingresar otro dato? precione cualquier tecla para continuar/n para cancelar")
+						utils.ReadInput(&inOption)
+						if inOption == "n" {
+							break for_input
+						}
+						break for_input
+					}
 					fmt.Println()
 				case "4":
 					fmt.Println("Salir...")
